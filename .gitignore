@@ -1,0 +1,27 @@
+# Environments
+.env
+.venv
+venv/
+ENV/
+
+# Data and Models
+data/
+datasets/
+model_weights/
+*.h5
+*.pkl
+*.pt
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db   
