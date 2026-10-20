@@ -27,6 +27,13 @@ if user_input:
     response_state = chatbot.invoke({'messages': HumanMessage(content=user_input)}, config=config) # type: ignore
     ai_message = response_state['messages'][-1].content
 
-    st.session_state['message_history'].append({'role':'assistant', 'content':ai_message})
+    
     with st.chat_message('assistant'):
-        st.text(ai_message)
+        ai_message = st.write_stream(
+            message_chunk.content for message_chunk, metadata in chatbot.stream( #type: ignore
+                config=config,   #type: ignore
+                input={'messages': HumanMessage(content=user_input)},   #type: ignore
+                stream_mode='messages'
+            )
+        )
+    st.session_state['message_history'].append({'role':'assistant', 'content':ai_message})
