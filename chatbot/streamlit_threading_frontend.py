@@ -2,7 +2,7 @@ import streamlit as st
 import uuid
 
 from langchain_core.messages import HumanMessage
-from langgraph_backend import chatbot, llm
+from langgraph_backend import chatbot, retrieve_all_threads
 
 
 
@@ -22,7 +22,7 @@ def reset_chat():
 
 def add_thread(thread_id):
     if thread_id not in st.session_state['chat_threads']:
-        st.session_state['chat_threads'][thread_id] = 'New Chat'
+        st.session_state['chat_threads'].append(thread_id)
 
 
 def load_conversation(thread_id):
@@ -44,7 +44,7 @@ if 'message_history' not in st.session_state:
 
 # Chat threads will be dict of key=thread_id and value=conversation_description
 if 'chat_threads' not in st.session_state:
-    st.session_state['chat_threads'] = {}
+    st.session_state['chat_threads'] = retrieve_all_threads()
 
 if 'thread_id' not in st.session_state:
     st.session_state['thread_id'] = generate_uuid()
@@ -61,8 +61,8 @@ if st.sidebar.button('New Chat'):
 
 
 st.sidebar.header('Your conversations')
-for thread_id, title in reversed(list(st.session_state['chat_threads'].items())):
-    if st.sidebar.button(title, key=thread_id):
+for thread_id in reversed(st.session_state['chat_threads']):
+    if st.sidebar.button(thread_id):
         st.session_state['thread_id'] = thread_id
         messages = load_conversation(thread_id)
 
@@ -87,11 +87,6 @@ for message in st.session_state['message_history']:
 user_input = st.chat_input('Ask anything')
 
 if user_input:
-    thread_id = st.session_state['thread_id']
-    if st.session_state['chat_threads'][thread_id] == 'New Chat':
-        summary = llm.invoke(f"Explain the intent of this text in less than 8 words so that it can be used to display title of a conversation in a chatbot application: {user_input}").content
-        st.session_state['chat_threads'][thread_id] = summary
-
     st.session_state['message_history'].append({'role':'user', 'content': user_input})
     with st.chat_message('user'):
         st.text(user_input)
