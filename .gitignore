@@ -11,7 +11,8 @@ model_weights/
 *.h5
 *.pkl
 *.pt
-*.db
+**/*.db
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
