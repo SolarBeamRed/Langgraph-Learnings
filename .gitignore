@@ -12,6 +12,7 @@ model_weights/
 *.pkl
 *.pt
 **/*.db
+islr.pdf
 
 
 # Byte-compiled / optimized / DLL files
